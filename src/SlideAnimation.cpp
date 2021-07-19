@@ -1,6 +1,6 @@
 #include "SlideAnimation.h"
 
-SlideAnimation::SlideAnimation(LedStrip *strip, unsigned int count, unsigned int speed, uint32_t colour) {
+SlideAnimation::SlideAnimation(LedStrip *strip, unsigned int count, unsigned int speed) {
     _state = SlideAnimation::OFF;
     _count = count;
     _leftPosition = 0;
@@ -9,34 +9,33 @@ SlideAnimation::SlideAnimation(LedStrip *strip, unsigned int count, unsigned int
     _speed = speed;
     _lastMillis = millis();
     _strip = strip;
-    _colour = colour;
 }
 
-void SlideAnimation::turnOn() {
+void SlideAnimation::turnOn(ColourProvider* colourProvider) {
     if (_state == SlideAnimation::OFF || _state == SlideAnimation::TURNING_OFF) {
         _state = SlideAnimation::TURNING_ON;
     }
 };
 
-void SlideAnimation::turnOff() {
+void SlideAnimation::turnOff(ColourProvider* colourProvider) {
     if (_state == SlideAnimation::ON || _state == SlideAnimation::TURNING_ON) {
         _state = SlideAnimation::TURNING_OFF;
     }
 };
 
-void SlideAnimation::loop() {
+void SlideAnimation::loop(ColourProvider* colourProvider) {
     if (_state == SlideAnimation::TURNING_ON) {
-        handleTurningOn();
+        handleTurningOn(colourProvider);
     } else if (_state == SlideAnimation::TURNING_OFF) {
-        handleTurningOff();
+        handleTurningOff(colourProvider);
     }
 };
 
-void SlideAnimation::handleTurningOn() {
+void SlideAnimation::handleTurningOn(ColourProvider* colourProvider) {
     unsigned long currentMillis = millis();
     if (currentMillis > (_lastMillis + _speed)) {
-        _strip -> setPixelColour(_leftPosition, _colour);
-        _strip -> setPixelColour(_rightPosition, _colour);
+        _strip -> setPixelColour(_leftPosition, colourProvider -> getColour(_leftPosition));
+        _strip -> setPixelColour(_rightPosition, colourProvider -> getColour(_rightPosition));
         _strip -> update();
 
         if (_leftPosition == _rightPosition -1) {
@@ -55,7 +54,7 @@ void SlideAnimation::handleTurningOn() {
     }
 }
 
-void SlideAnimation::handleTurningOff() {
+void SlideAnimation::handleTurningOff(ColourProvider* colourProvider) {
     unsigned long currentMillis = millis();
     if (currentMillis > (_lastMillis + _speed)) {
         _strip -> setPixelColour(_leftPosition, 0);
@@ -91,12 +90,4 @@ void SlideAnimation::setSpeed(unsigned int speed) {
 
 int SlideAnimation::getSpeed() {
     return _speed;
-}
-
-void SlideAnimation::setColour(uint32_t colour) {
-    _colour = colour;
-}
-
-uint32_t SlideAnimation::getColour() {
-    return _colour;
 }

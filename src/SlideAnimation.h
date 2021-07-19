@@ -3,18 +3,16 @@
 
 #include <Animation.h>
 #include <LedStrip.h>
+#include <ColourProvider.h>
 
 class SlideAnimation : public Animation {
 
 public:
-    SlideAnimation(LedStrip *strip, unsigned int count, unsigned int speed, uint32_t colour);
-    void turnOn();
-    void turnOff();
-    void loop();
+    SlideAnimation(LedStrip *strip, unsigned int count, unsigned int speed);
+    void turnOn(ColourProvider* colourProvider);
+    void turnOff(ColourProvider* colourProvider);
+    void loop(ColourProvider* colourProvider);
     void resetAnimation();
-
-    uint32_t getColour();
-    void setColour(uint32_t colour);
 
     int getSpeed();
     void setSpeed(unsigned int speed);
@@ -35,10 +33,9 @@ private:
     unsigned int _endPosition;
     unsigned long _lastMillis;
     LedStrip *_strip;
-    uint32_t _colour;
 
-    void handleTurningOn();
-    void handleTurningOff();
+    void handleTurningOn(ColourProvider* colourProvider);
+    void handleTurningOff(ColourProvider* colourProvider);
 };
 
 #endif //LIBRARIES_SLIDEANIMATION_H
