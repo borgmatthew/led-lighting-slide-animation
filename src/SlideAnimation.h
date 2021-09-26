@@ -36,6 +36,7 @@ private:
 
     void handleTurningOn(ColourProvider* colourProvider);
     void handleTurningOff(ColourProvider* colourProvider);
+    void handleOn(ColourProvider* colourProvider);
 };
 
 #endif //LIBRARIES_SLIDEANIMATION_H

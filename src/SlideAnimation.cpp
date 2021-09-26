@@ -28,6 +28,8 @@ void SlideAnimation::loop(ColourProvider* colourProvider) {
         handleTurningOn(colourProvider);
     } else if (_state == SlideAnimation::TURNING_OFF) {
         handleTurningOff(colourProvider);
+    } else if (_state == SlideAnimation::ON) {
+        handleOn(colourProvider);
     }
 };
 
@@ -75,6 +77,14 @@ void SlideAnimation::handleTurningOff(ColourProvider* colourProvider) {
 
         _lastMillis = currentMillis;
     }
+}
+
+void SlideAnimation::handleOn(ColourProvider *colourProvider) {
+    for(int i = 0; i < _count; i++) {
+        uint32_t colour = colourProvider -> getColour(i);
+        _strip -> setPixelColour(i, colour);
+    }
+    _strip -> update();
 }
 
 void SlideAnimation::resetAnimation() {
